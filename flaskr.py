@@ -36,6 +36,19 @@ def init_db():
     # >>> from flaskr import init_db
     # >>> init_db()
 
+# Initialize DB connections before each request & shut them down afterwards.
+# before_request() is called before a request and passed no arguments.
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+# teardown_request() gets called after the response has been constructed.
+@app.teardown_request
+def teardown_request(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+      db.close()
+
 # check to fire up server if we want to run this file as a standalone application
 if __name__ == '__main__':
     app.run()
@@ -59,3 +72,11 @@ if __name__ == '__main__':
 # db.commit() to commit changes. SQLite 3 and other transactional databases will not commit unless you explicityly tell it to.
 
 # If you get an exception later that a table cannot be found check that you did call the init_db function and that your table names are correct (singular vs. plural for example).
+
+# after_request() functions are called after a request and passed the response that will be sent to the client. they have to return the response object or a different one. they are not guaranteed to be executed if an exception is raised - therefore better to use teardown_request().
+
+# teardown_request() functions are not allowed to modify the request and their return values are ignored. if an exception occurred during the request, it is passed to each function; otherwise, None is passed in.
+
+# special `g` object Flask provides to store current DB connection - stores info for one request only and is available from within each function. **never store DB connection in other objects - would not work with threaded environments.
+
+
