@@ -122,4 +122,7 @@ if __name__ == '__main__':
 
 # SECURITY NOTE: use question marks when building SQL statements (like with g.db.execute in add_entry() function). otherwise app will be vulnerable to SQL injection when using string formatting to build SQL statements.
 
+# Jinja provides access to missing attributes and items of objects/dicts, even if there is no `logged_in` key in session.
+# with Jinja, the `session` dict is available in the template - can use that to check if user is logged in or not
+
 
