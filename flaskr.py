@@ -18,7 +18,6 @@ import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, request, session, g, redirect, url_for, \
     abort, render_template, flash
-from contextlib import closing
 
 # create flaskr application and initialize it with the config from the same file, in flaskr.py
 app = Flask(__name__)
@@ -28,11 +27,11 @@ app = Flask(__name__)
     # per tutorial: ok in small apps to drop config directly into module.
     # cleaner solution would be to create separate `.ini` or `.py` file and load that or import the values from there.
 app.config.update(dict(
-    DATABASE = '/tmp/flaskr.db'
-    DEBUG = True
-    SECRET_KEY = 'development key'
-    USERNAME = 'admin'
-    PASSWORD = 'default'
+    DATABASE = os.path.join(app.root_path, 'flaskr.db'),
+    DEBUG = True,
+    SECRET_KEY = 'development key',
+    USERNAME = 'admin',
+    PASSWORD = 'default',
 ))
 
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
