@@ -10,7 +10,7 @@ _March 2015_
 * Utilizing Python 3.4.2.
 * Install virtual environment in project root: `$ virtualenv venv`
 * Activate virtual environment: `$ . venv/bin/activate`
-* Install Flask and its dependencies wtih: `$ pip install Flask`
+* Install Flask 0.11.dev0 and its dependencies wtih: `$ pip install https://github.com/mitsuhiko/flask/tarball/master`
 * Using Python's native sqlite3 module. Check for sqlite3:
 ```
 $ python
@@ -34,3 +34,15 @@ Type "help", "copyright", "credits" or "license" for more information.
 1. Let the user sign in and out with credentials specified in the configuration. Only one user is supported.
 2. When the user is logged in they can add new entries to the page consisting of a text-only title and some HTML for the text. This HTML is not sanitized because we trust the user here.
 3. The page shows all entries so far in reverse order (newest on top) and the user can add new ones from there if logged in.
+
+## Run App
+
+1. Initialize database
+```
+$ flask --app=flaskr initdb
+```
+2. Run flaskr
+```
+$ flask --app=flaskr run
+```
+
