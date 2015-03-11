@@ -1,4 +1,5 @@
 .DS_Store
+flaskr.db
 __pycache__/
 tmp/
 venv/
