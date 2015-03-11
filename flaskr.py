@@ -49,6 +49,24 @@ def teardown_request(exception):
     if db is not None:
       db.close()
 
+# show_entries() view function passes entries as dicts to the show_entries.html template and returns the rendered one.
+@app.route('/')
+def show_entries():
+    cur = g.db.execute('select title, text from entries order by id desc')
+    entries = [dict(title=row[0], text=row[1]) for row in cur.fetchall()]
+    return render_template('show_entries.html', entries=entries)
+
+# add_entry() view function lets user add new entries if they are logged in with a form on the show_entries page. function only responds to POST requests.
+@app.route('/add', methods=['POST'])
+def add_entry():
+    if not session.get('logged_in'):
+        abort(401)
+    g.db.execute('insert into entries (title, text) values (?, ?)',
+                 [request.form['title'], request.form['text']])
+    g.db.commit()
+    flash('New entry was successfully posted')
+    return redirect(url_for('show_entries'))
+
 # check to fire up server if we want to run this file as a standalone application
 if __name__ == '__main__':
     app.run()
@@ -71,12 +89,14 @@ if __name__ == '__main__':
 
 # db.commit() to commit changes. SQLite 3 and other transactional databases will not commit unless you explicityly tell it to.
 
-# If you get an exception later that a table cannot be found check that you did call the init_db function and that your table names are correct (singular vs. plural for example).
+# TROUBLESHOOTING NOTE: if you get an exception later that a table cannot be found check that you did call the init_db function and that your table names are correct (singular vs. plural for example).
 
 # after_request() functions are called after a request and passed the response that will be sent to the client. they have to return the response object or a different one. they are not guaranteed to be executed if an exception is raised - therefore better to use teardown_request().
 
 # teardown_request() functions are not allowed to modify the request and their return values are ignored. if an exception occurred during the request, it is passed to each function; otherwise, None is passed in.
 
 # special `g` object Flask provides to store current DB connection - stores info for one request only and is available from within each function. **never store DB connection in other objects - would not work with threaded environments.
+
+# SECURITY NOTE: use question marks when building SQL statements (like with g.db.execute in add_entry() function). otherwise app will be vulnerable to SQL injection when using string formatting to build SQL statements.
 
 
