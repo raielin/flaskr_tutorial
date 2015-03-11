@@ -2,6 +2,7 @@
 
 My attempt to build the Flaskr app from the official Flask documentation tutorial.
 http://flask.pocoo.org/docs/0.10/tutorial/#tutorial
+https://github.com/mitsuhiko/flask/tree/master/examples/flaskr
 
 _March 2015_
 
